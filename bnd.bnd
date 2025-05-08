@@ -5,7 +5,6 @@ Bundle-Version: 1.0.0
 -metatype: *
 
 Import-Package: \
-    *,\
     javax.naming,\
     javax.sql,\
     org.springframework.jdbc.core,\
