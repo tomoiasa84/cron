@@ -8,7 +8,9 @@ Import-Package: \
     javax.naming,\
     javax.sql,\
     org.springframework.jdbc.core,\
-    org.springframework.jdbc.support.rowset
+    org.springframework.jdbc.support.rowset,\
+    com.liferay.portal.kernel.scheduler;version="[7.4,8)"
+
 
 # Remove the Include-Resource section as we'll handle dependencies through build.gradle
 # Instead of embedding the JARs directly
