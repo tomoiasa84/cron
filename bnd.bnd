@@ -4,10 +4,10 @@ Bundle-Version: 1.0.0
 
 Import-Package: \
     com.liferay.petra.function,\
-    com.liferay.portal.kernel.exception,\
+    com.liferay.portal.kernel.exception;version="[13.4.0,14.0.0)",\
     com.liferay.portal.kernel.log,\
     com.liferay.portal.kernel.model,\
-    com.liferay.portal.kernel.scheduler,\
+    com.liferay.portal.kernel.scheduler;version="[19.0.0,20.0.0)",\
     com.liferay.portal.kernel.service,\
     com.liferay.portal.kernel.util,\
     javax.naming,\
@@ -15,7 +15,3 @@ Import-Package: \
     org.springframework.jdbc.core,\
     org.springframework.jdbc.support.rowset,\
     *
-
-
-# Remove the Include-Resource section as we'll handle dependencies through build.gradle
-# Instead of embedding the JARs directly
