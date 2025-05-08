@@ -7,7 +7,7 @@ Import-Package: \
     com.liferay.portal.kernel.exception;version="[13.0.0,)",\
     com.liferay.portal.kernel.log,\
     com.liferay.portal.kernel.model,\
-    com.liferay.portal.kernel.scheduler;version="[19.0.0,)",\
+    com.liferay.portal.kernel.scheduler;version="[18.1.0,)",\
     com.liferay.portal.kernel.service,\
     com.liferay.portal.kernel.util,\
     javax.naming,\
