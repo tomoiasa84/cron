@@ -1,0 +1,15 @@
+Bundle-Name: User Batch Create
+Bundle-SymbolicName: user.batch.create
+Bundle-Version: 1.0.0
+
+-metatype: *
+
+Import-Package: \
+    *,\
+    javax.naming,\
+    javax.sql,\
+    org.springframework.jdbc.core,\
+    org.springframework.jdbc.support.rowset
+
+# Remove the Include-Resource section as we'll handle dependencies through build.gradle
+# Instead of embedding the JARs directly
