@@ -17,24 +17,22 @@ dependencies {
     compileOnly group: "com.liferay", name: "com.liferay.petra.function"
     compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations"
     compileOnly group: "javax.portlet", name: "portlet-api"
+    compileOnly group: "javax.servlet", name: "javax.servlet-api"
     
-    // Spring dependencies - using implementation without versions
+    // Spring dependencies
     implementation group: "org.springframework", name: "spring-jdbc"
     implementation group: "org.springframework", name: "spring-core"
     implementation group: "org.springframework", name: "spring-beans"
     implementation group: "org.springframework", name: "spring-tx"
-    
-    compileOnly group: "javax.servlet", name: "javax.servlet-api"
 }
 
 repositories {
     maven {
         url "https://repository-cdn.liferay.com/nexus/content/groups/public"
     }
-    mavenCentral() // Added for non-Liferay dependencies
+    mavenCentral()
 }
 
 liferay {
-    // Configure for your external server - update this path
     deployDir = new File("${System.properties['user.home']}/liferay-deploy")
 }

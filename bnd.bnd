@@ -2,14 +2,18 @@ Bundle-Name: User Batch Create
 Bundle-SymbolicName: user.batch.create
 Bundle-Version: 1.0.0
 
--metatype: *
-
 Import-Package: \
+    com.liferay.petra.function,\
+    com.liferay.portal.kernel.exception,\
+    com.liferay.portal.kernel.log,\
+    com.liferay.portal.kernel.model,\
+    com.liferay.portal.kernel.scheduler,\
+    com.liferay.portal.kernel.service,\
+    com.liferay.portal.kernel.util,\
     javax.naming,\
     javax.sql,\
     org.springframework.jdbc.core,\
     org.springframework.jdbc.support.rowset,\
-    com.liferay.portal.kernel.scheduler,\
     *
 
 
