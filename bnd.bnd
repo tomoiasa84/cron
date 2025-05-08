@@ -9,7 +9,8 @@ Import-Package: \
     javax.sql,\
     org.springframework.jdbc.core,\
     org.springframework.jdbc.support.rowset,\
-    com.liferay.portal.kernel.scheduler;version="[7.4,8)"
+    com.liferay.portal.kernel.scheduler,\
+    *
 
 
 # Remove the Include-Resource section as we'll handle dependencies through build.gradle
