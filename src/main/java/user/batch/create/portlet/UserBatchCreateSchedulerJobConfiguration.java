@@ -34,11 +34,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 )
 public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobConfiguration {
 
-	@Reference(
-	        target = "(osgi.jndi.service.name=jdbc/shimPooledDB)",
-	        unbind = "-"
-	    )
-	private DataSource bannerDataSource;
+	private static DataSource bannerDataSource;
 
     private static long companyId;
     private static final Log LOG = LogFactoryUtil.getLog(UserBatchCreateSchedulerJobConfiguration.class);
