@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.scheduler.TriggerConfiguration;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -60,6 +61,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
         }
     }
     
+    /*
     private void initializeDataSource() {
         if (bannerDataSource == null) {
             synchronized (UserBatchCreateSchedulerJobConfiguration.class) {
@@ -88,7 +90,64 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
                 }
             }
         }
+    }*/
+    
+    private void initializeDataSource() {
+        if (bannerDataSource != null) {
+            return;
+        }
+
+        synchronized (UserBatchCreateSchedulerJobConfiguration.class) {
+            if (bannerDataSource != null) {
+                return;
+            }
+
+            ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
+
+            try {
+                // Use portal classloader so JNDI sees Tomcat ResourceLinks
+                Thread.currentThread().setContextClassLoader(
+                    PortalClassLoaderUtil.getClassLoader()
+                );
+
+                Context ctx = new InitialContext();
+
+                try {
+                    bannerDataSource = (DataSource)
+                        ctx.lookup("java:comp/env/jdbc/shimPooledDB");
+                    LOG.info("DataSource bound from java:comp/env/jdbc/shimPooledDB");
+                }
+                catch (NamingException ne) {
+                    LOG.warn("java:comp/env lookup failed, trying root name", ne);
+                    bannerDataSource = (DataSource)
+                        ctx.lookup("jdbc/shimPooledDB");
+                    LOG.info("DataSource bound from jdbc/shimPooledDB");
+                }
+
+                // Initialize companyId once
+                try {
+                    Company company =
+                        companyLocalService.getCompanyByWebId("texastech.edu");
+
+                    companyId = (company != null)
+                        ? company.getCompanyId()
+                        : 20157L;
+                }
+                catch (PortalException | SystemException e) {
+                    LOG.error("Unable to resolve companyId, using fallback", e);
+                    companyId = 20157L;
+                }
+            }
+            catch (NamingException ne) {
+                LOG.error("Failed to lookup DataSource", ne);
+                throw new RuntimeException("DataSource JNDI lookup failed", ne);
+            }
+            finally {
+                Thread.currentThread().setContextClassLoader(originalCL);
+            }
+        }
     }
+
 
     
     
@@ -114,7 +173,10 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
 
             SqlRowSet newUsersToday = jt.queryForRowSet(sql);
 
+            int index =0;
             while (newUsersToday.next()) {
+            	index++;
+            	if(index>3) break;
                 String newUserTodayEmail = newUsersToday.getString("CAS_BANNER_EMAIL");
                 
                 if (newUserTodayEmail == null || newUserTodayEmail.trim().isEmpty()) {
