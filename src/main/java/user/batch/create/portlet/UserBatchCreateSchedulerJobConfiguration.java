@@ -48,6 +48,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
 
     @Override
     public UnsafeRunnable<Exception> getJobExecutorUnsafeRunnable() {
+    	System.out.println("STARTING BATACH USER CREATE");
         return () -> {
             LOG.info("Running user batch create job");
             System.out.println("Running user batch create job");
