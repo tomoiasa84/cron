@@ -5,6 +5,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.scheduler.SchedulerJobConfiguration;
 import com.liferay.portal.kernel.scheduler.TimeUnit;
@@ -16,6 +17,9 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.osgi.service.component.annotations.Activate;
@@ -60,12 +64,13 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
         }
     }
     
-  /*  private void initializeDataSource() {
+    private void initializeDataSource() {
         if (bannerDataSource == null) {
             synchronized (UserBatchCreateSchedulerJobConfiguration.class) {
                 if (bannerDataSource == null) {
                     try {
-                        Context env = (Context) new InitialContext().lookup("java:comp/env");
+                        //Context env = (Context) new InitialContext().lookup("java:comp/env");
+                    	Context env = (Context) new InitialContext();
                         bannerDataSource = (DataSource) env.lookup("jdbc/shimPooledDB");
                         
                         Company company = null;
@@ -87,7 +92,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
                 }
             }
         }
-    }*/
+    }
 
     
     
@@ -98,7 +103,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
             LOG.info("Running user batch create job");
             System.out.println("Running user batch create job");
 
-       //     initializeDataSource();
+            initializeDataSource();
             
             JdbcTemplate jt = new JdbcTemplate(bannerDataSource);
 
