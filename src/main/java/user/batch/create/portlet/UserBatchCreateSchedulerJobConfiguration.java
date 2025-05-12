@@ -22,6 +22,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,6 +47,19 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
     @Reference
     private UserLocalService userLocalService;
 
+    @Activate
+    protected void activate() {
+        // 1) run once on startup
+        try {
+            LOG.info("Startup: running batch user‐create job immediately");
+            getJobExecutorUnsafeRunnable().run();
+        }
+        catch (Exception e) {
+            LOG.error("Error running startup batch job", e);
+        }
+    }
+    
+    
     @Override
     public UnsafeRunnable<Exception> getJobExecutorUnsafeRunnable() {
     	System.out.println("STARTING BATACH USER CREATE");
