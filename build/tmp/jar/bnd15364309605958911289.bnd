@@ -12,7 +12,7 @@ group=raiderlink.modules
 -plugin.metatype=com.liferay.ant.bnd.metatype.MetatypePlugin
 buildTreePath=\:modules\:user-batch-create
 -consumer-policy=${replacestring;${range;[\=\=,\=\=]};.*,(.*)];$1}
-liferay.workspace.product=dxp-2024.q1.14
+liferay.workspace.product=dxp-7.4-u92
 version=1.0.0
 -fixupmessages.classpath.empty=Classpath is empty
 -fixupmessages.unicode.string=Invalid unicode string
@@ -28,7 +28,7 @@ target.platform.index.sources=false
 description=User Batch Create
 Javac-Debug=on
 Javac-Encoding=UTF-8
-Import-Package=*
+Import-Package=com.liferay.petra.function,com.liferay.portal.kernel.exception;version\="[13.0.0,)",com.liferay.portal.kernel.log,com.liferay.portal.kernel.model,com.liferay.portal.kernel.scheduler;version\="[18.1.0,)",com.liferay.portal.kernel.service,com.liferay.portal.kernel.util,javax.naming,javax.sql,org.springframework.jdbc.core,org.springframework.jdbc.support.rowset,*
 -plugin.liferay=com.liferay.ant.bnd.resource.AddResourceVerifierPlugin,com.liferay.ant.bnd.jsp.JspAnalyzerPlugin,com.liferay.ant.bnd.metatype.MetatypePlugin,com.liferay.ant.bnd.npm.NpmAnalyzerPlugin,com.liferay.ant.bnd.resource.bundle.ResourceBundleLoaderAnalyzerPlugin,com.liferay.ant.bnd.sass.SassAnalyzerPlugin,com.liferay.ant.bnd.service.ServiceAnalyzerPlugin,com.liferay.ant.bnd.social.SocialAnalyzerPlugin,aQute.lib.spring.SpringComponent,com.liferay.ant.bnd.spring.SpringDependencyAnalyzerPlugin,com.liferay.ant.bnd.enterprise.EnterpriseAnalyzerPlugin
 propertiesPluginEnvironmentNameProperty=environmentName
 -metatype=*
