@@ -5,7 +5,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.scheduler.SchedulerJobConfiguration;
 import com.liferay.portal.kernel.scheduler.TimeUnit;
@@ -17,9 +16,6 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.osgi.service.component.annotations.Activate;
@@ -34,7 +30,12 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 )
 public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobConfiguration {
 
-    private static DataSource bannerDataSource;
+	@Reference(
+	        target = "(osgi.jndi.service.name=jdbc/shimPooledDB)",
+	        unbind = "-"
+	    )
+	private DataSource bannerDataSource;
+
     private static long companyId;
     private static final Log LOG = LogFactoryUtil.getLog(UserBatchCreateSchedulerJobConfiguration.class);
 
@@ -59,6 +60,36 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
         }
     }
     
+  /*  private void initializeDataSource() {
+        if (bannerDataSource == null) {
+            synchronized (UserBatchCreateSchedulerJobConfiguration.class) {
+                if (bannerDataSource == null) {
+                    try {
+                        Context env = (Context) new InitialContext().lookup("java:comp/env");
+                        bannerDataSource = (DataSource) env.lookup("jdbc/shimPooledDB");
+                        
+                        Company company = null;
+                        try {
+                            company = companyLocalService.getCompanyByWebId("texastech.edu");
+                            if (company != null) {
+                                companyId = company.getCompanyId();
+                            } else {
+                                companyId = 20157; // Default fallback
+                            }
+                        } catch (PortalException | SystemException e) {
+                            LOG.error("Error searching for company id" + "\n" + e);
+                            companyId = 20157; // Default fallback
+                        }
+                    } catch (NamingException e) {
+                        LOG.error("Failed to lookup data source", e);
+                        throw new RuntimeException("Failed to lookup data source", e);
+                    }
+                }
+            }
+        }
+    }*/
+
+    
     
     @Override
     public UnsafeRunnable<Exception> getJobExecutorUnsafeRunnable() {
@@ -67,7 +98,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
             LOG.info("Running user batch create job");
             System.out.println("Running user batch create job");
 
-            initializeDataSource();
+       //     initializeDataSource();
             
             JdbcTemplate jt = new JdbcTemplate(bannerDataSource);
 
@@ -140,35 +171,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
         return TriggerConfiguration.createTriggerConfiguration(60, TimeUnit.MINUTE);
     }
 
-    private void initializeDataSource() {
-        if (bannerDataSource == null) {
-            synchronized (UserBatchCreateSchedulerJobConfiguration.class) {
-                if (bannerDataSource == null) {
-                    try {
-                        Context env = (Context) new InitialContext().lookup("java:comp/env");
-                        bannerDataSource = (DataSource) env.lookup("jdbc/shimPooledDB");
-                        
-                        Company company = null;
-                        try {
-                            company = companyLocalService.getCompanyByWebId("texastech.edu");
-                            if (company != null) {
-                                companyId = company.getCompanyId();
-                            } else {
-                                companyId = 20157; // Default fallback
-                            }
-                        } catch (PortalException | SystemException e) {
-                            LOG.error("Error searching for company id" + "\n" + e);
-                            companyId = 20157; // Default fallback
-                        }
-                    } catch (NamingException e) {
-                        LOG.error("Failed to lookup data source", e);
-                        throw new RuntimeException("Failed to lookup data source", e);
-                    }
-                }
-            }
-        }
-    }
-
+    
     private User createUser(long companyId, String emailAddress)
             throws PortalException, SystemException {
 
