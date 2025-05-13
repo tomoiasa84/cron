@@ -212,7 +212,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
 
                 try {
                     user = userLocalService.fetchUserByEmailAddress(companyId, newUserTodayEmail);
-                    System.out.println("SSearched for user:" + newUserTodayEmail + "result:"+user);
+                    System.out.println("Searched for user:" + newUserTodayEmail + "\nresult:"+user);
                 } catch (SystemException e) {
                     LOG.error("Error searching for user " + newUserTodayEmail + "\n" + e);
                     System.out.println("Error searching for user " + newUserTodayEmail + "\n" + e);
