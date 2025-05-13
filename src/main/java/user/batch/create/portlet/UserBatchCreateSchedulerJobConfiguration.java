@@ -190,7 +190,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
             int index =0;
             while (newUsersToday.next()) {
             	index++;
-            	if(index>3) break;
+            	if(index>10) break;
                 String newUserTodayEmail = newUsersToday.getString("CAS_BANNER_EMAIL");
                 System.out.println("One new users:"+newUserTodayEmail);
                 
@@ -212,12 +212,14 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
 
                 try {
                     user = userLocalService.fetchUserByEmailAddress(companyId, newUserTodayEmail);
+                    System.out.println("SSearched for user:" + newUserTodayEmail + "result:"+user);
                 } catch (SystemException e) {
                     LOG.error("Error searching for user " + newUserTodayEmail + "\n" + e);
                     System.out.println("Error searching for user " + newUserTodayEmail + "\n" + e);
                 }
                 
                 if (user == null) {
+                	System.out.println("Trying to create user:" + newUserTodayEmail );
                     try {
                         user = createUser(companyId, newUserTodayEmail);
                         userCreated = true;
