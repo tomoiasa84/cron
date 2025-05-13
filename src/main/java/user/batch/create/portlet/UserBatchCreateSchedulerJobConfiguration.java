@@ -105,15 +105,23 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
             }
 
             
-            dumpJndiResources();
+          
             
             
             ClassLoader originalCL = Thread.currentThread().getContextClassLoader();
 
             try {
                 // Use portal classloader so JNDI sees Tomcat ResourceLinks
+            	
+            	// get the shielded class loader
+                ClassLoader shieldedClassLoader = PortalClassLoaderUtil.getClassLoader();
+
+                // get the webapp class loader from it
+                ClassLoader webappClassLoader = shieldedClassLoader.getClass().getClassLoader();
+             
+            	
                 Thread.currentThread().setContextClassLoader(
-                    PortalClassLoaderUtil.getClassLoader()
+                		webappClassLoader
                 );
 
                 Context ctx = new InitialContext();
@@ -322,51 +330,7 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
         return Pattern.matches(regex, email);
     }
     
-    ////////////
-    /////////////
-    
-    private void dumpJndiResources() {
-        // swap to portal classloader so you see Tomcat’s JNDI
-        Thread current = Thread.currentThread();
-        ClassLoader originalCL = current.getContextClassLoader();
-        current.setContextClassLoader(PortalClassLoaderUtil.getClassLoader());
-
-        try {
-            Context ctx = new InitialContext();
-
-            // 1) list the root namespace
-            System.out.println("---- ROOT JNDI ----");
-            listContext(ctx);
-
-            // 2) if you have java:comp/env, list that too
-            try {
-                Context env = (Context)ctx.lookup("java:comp/env");
-                System.out.println("---- java:comp/env ----");
-                listContext(env);
-            }
-            catch (NamingException ne) {
-                System.out.println("No java:comp/env context");
-            }
-        }
-        catch (NamingException ne) {
-            System.err.println("JNDI dump failed: " + ne);
-        }
-        finally {
-            // restore
-            current.setContextClassLoader(originalCL);
-        }
-    }
-
-    private void listContext(Context ctx) throws NamingException {
-        NamingEnumeration<NameClassPair> list = ctx.list("");
-        while (list.hasMore()) {
-            NameClassPair pair = list.next();
-            System.out.println(
-                String.format("  %s : %s", pair.getName(), pair.getClassName())
-            );
-        }
-    }
-
+  
     
     
     
