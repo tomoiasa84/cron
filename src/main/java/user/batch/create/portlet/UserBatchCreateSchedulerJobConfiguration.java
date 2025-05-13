@@ -186,12 +186,13 @@ public class UserBatchCreateSchedulerJobConfiguration implements SchedulerJobCon
                 " AND LENGTH(TRIM(CAS_BANNER_EMAIL)) > 0";
 
             SqlRowSet newUsersToday = jt.queryForRowSet(sql);
-
+            System.out.println("New users:"+newUsersToday);
             int index =0;
             while (newUsersToday.next()) {
             	index++;
             	if(index>3) break;
                 String newUserTodayEmail = newUsersToday.getString("CAS_BANNER_EMAIL");
+                System.out.println("One new users:"+newUserTodayEmail);
                 
                 if (newUserTodayEmail == null || newUserTodayEmail.trim().isEmpty()) {
                     LOG.warn("Skipping row with null or empty CAS_BANNER_EMAIL");
